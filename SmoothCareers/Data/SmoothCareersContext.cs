@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmoothCareers.Configurations.Entities;
 using SmoothCareers.Data;
@@ -19,6 +20,10 @@ namespace SmoothCareers.Data
             builder.ApplyConfiguration(new JobCategorySeed());
             builder.ApplyConfiguration(new JobTypeSeed());
             builder.ApplyConfiguration(new WorkArrangementSeed());
+            builder.ApplyConfiguration(new RoleSeed());
+            builder.ApplyConfiguration(new UserSeed());
+            builder.ApplyConfiguration(new UserRoleSeed());
+
 
         }
     }

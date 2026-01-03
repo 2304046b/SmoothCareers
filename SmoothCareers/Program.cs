@@ -34,6 +34,10 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 builder.Services.AddIdentityCore<SmoothCareersUser>(options => options.SignIn.RequireConfirmedAccount = true)
+     // add
+     .AddRoles<IdentityRole>()
+
+
     .AddEntityFrameworkStores<SmoothCareersContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
