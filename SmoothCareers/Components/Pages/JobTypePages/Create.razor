@@ -1,0 +1,64 @@
+﻿@page "/jobtypes/create"
+@using Microsoft.EntityFrameworkCore
+@using SmoothCareers.Domain
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>JobType</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="JobType" OnValidSubmit="AddJobType" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="JobType.Name" class="form-control" /> 
+                <ValidationMessage For="() => JobType.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="JobType.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => JobType.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="JobType.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => JobType.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="JobType.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => JobType.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="JobType.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => JobType.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/jobtypes">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private JobType JobType { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddJobType()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.JobType.Add(JobType);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/jobtypes");
+    }
+}

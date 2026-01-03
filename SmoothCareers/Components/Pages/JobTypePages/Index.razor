@@ -1,0 +1,40 @@
+﻿@page "/jobtypes"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SmoothCareers.Domain
+@using SmoothCareers.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="jobtypes/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.JobType">
+    <PropertyColumn Property="jobtype => jobtype.Name" />
+    <PropertyColumn Property="jobtype => jobtype.DateCreated" />
+    <PropertyColumn Property="jobtype => jobtype.DateUpdated" />
+    <PropertyColumn Property="jobtype => jobtype.CreatedBy" />
+    <PropertyColumn Property="jobtype => jobtype.UpdatedBy" />
+
+    <TemplateColumn Context="jobtype">
+        <a href="@($"jobtypes/edit?id={jobtype.Id}")">Edit</a> |
+        <a href="@($"jobtypes/details?id={jobtype.Id}")">Details</a> |
+        <a href="@($"jobtypes/delete?id={jobtype.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private SmoothCareersContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

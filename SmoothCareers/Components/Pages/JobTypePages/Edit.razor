@@ -1,0 +1,109 @@
+﻿@page "/jobtypes/edit"
+@using Microsoft.EntityFrameworkCore
+@using SmoothCareers.Domain
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>JobType</h2>
+<hr />
+@if (JobType is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="JobType" OnValidSubmit="UpdateJobType" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="JobType.Id" value="@JobType.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="JobType.Name" class="form-control" />
+                    <ValidationMessage For="() => JobType.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="JobType.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => JobType.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="JobType.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => JobType.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="JobType.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => JobType.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="JobType.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => JobType.UpdatedBy" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/jobtypes">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private JobType? JobType { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        JobType ??= await context.JobType.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (JobType is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateJobType()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(JobType!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!JobTypeExists(JobType!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/jobtypes");
+    }
+
+    private bool JobTypeExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.JobType.Any(e => e.Id == id);
+    }
+}

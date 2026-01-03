@@ -1,0 +1,40 @@
+﻿@page "/workarrangements"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SmoothCareers.Domain
+@using SmoothCareers.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="workarrangements/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.WorkArrangement">
+    <PropertyColumn Property="workarrangement => workarrangement.Name" />
+    <PropertyColumn Property="workarrangement => workarrangement.DateCreated" />
+    <PropertyColumn Property="workarrangement => workarrangement.DateUpdated" />
+    <PropertyColumn Property="workarrangement => workarrangement.CreatedBy" />
+    <PropertyColumn Property="workarrangement => workarrangement.UpdatedBy" />
+
+    <TemplateColumn Context="workarrangement">
+        <a href="@($"workarrangements/edit?id={workarrangement.Id}")">Edit</a> |
+        <a href="@($"workarrangements/details?id={workarrangement.Id}")">Details</a> |
+        <a href="@($"workarrangements/delete?id={workarrangement.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private SmoothCareersContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
