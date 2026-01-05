@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmoothCareers.Configurations.Entities;
 using SmoothCareers.Data;
+using SmoothCareers.Domain;
 
 namespace SmoothCareers.Data
 {
@@ -29,5 +30,6 @@ namespace SmoothCareers.Data
 
 
         }
+        public DbSet<SmoothCareers.Domain.Employer> Employer { get; set; } = default!;
     }
 }
