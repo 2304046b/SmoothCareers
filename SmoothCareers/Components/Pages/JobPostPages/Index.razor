@@ -6,12 +6,17 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 
+
+
 <PageTitle>Index</PageTitle>
 
 <h1>Index</h1>
 
 <p>
-    <a href="jobposts/create">Create New</a>
+    <AuthorizeView Roles="Administrator,Employer">
+        <a href="jobposts/create">Create New</a>
+    </AuthorizeView>
+
 </p>
 
 <QuickGrid Class="table" Items="context.JobPost">
