@@ -19,6 +19,9 @@ namespace SmoothCareers.Data
 
             builder.ApplyConfiguration(new JobCategorySeed());
             builder.ApplyConfiguration(new JobTypeSeed());
+            builder.ApplyConfiguration(new JobPostSeed());
+            builder.ApplyConfiguration(new EmployerSeed());
+
             builder.ApplyConfiguration(new WorkArrangementSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
