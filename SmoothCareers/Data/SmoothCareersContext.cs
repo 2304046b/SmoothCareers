@@ -10,6 +10,9 @@ namespace SmoothCareers.Data
     public class SmoothCareersContext(DbContextOptions<SmoothCareersContext> options) : IdentityDbContext<SmoothCareersUser>(options)
     {
         public DbSet<SmoothCareers.Domain.JobPost> JobPost { get; set; } = default!;
+
+        public DbSet<SmoothCareers.Domain.Application> Application { get; set; } = default!;
+
         public DbSet<SmoothCareers.Domain.JobCategory> JobCategory { get; set; } = default!;
         public DbSet<SmoothCareers.Domain.JobType> JobType { get; set; } = default!;
         public DbSet<SmoothCareers.Domain.WorkArrangement> WorkArrangement { get; set; } = default!;
@@ -27,6 +30,5 @@ namespace SmoothCareers.Data
 
 
         }
-        public DbSet<SmoothCareers.Domain.Application> Application { get; set; } = default!;
     }
 }
