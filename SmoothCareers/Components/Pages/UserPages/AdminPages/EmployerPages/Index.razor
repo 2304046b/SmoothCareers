@@ -1,0 +1,55 @@
+﻿@* =========================
+   Employers/Index.razor
+   ========================= *@
+@page "/employers"
+@attribute [Authorize(Roles = "Administrator,Employer,JobSeeker")]
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SmoothCareers.Domain
+@using SmoothCareers.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <AuthorizeView Roles="Administrator">
+        <a href="employers/create">Create New</a>
+    </AuthorizeView>
+</p>
+
+<QuickGrid Class="table" Items="context.Employer">
+    <PropertyColumn Property="employer => employer.CompanyName" />
+    <PropertyColumn Property="employer => employer.Industry" />
+    <PropertyColumn Property="employer => employer.Location" />
+    <PropertyColumn Property="employer => employer.About" />
+    <PropertyColumn Property="employer => employer.DateCreated" />
+    <PropertyColumn Property="employer => employer.DateUpdated" />
+    <PropertyColumn Property="employer => employer.CreatedBy" />
+    <PropertyColumn Property="employer => employer.UpdatedBy" />
+
+    <TemplateColumn Context="employer">
+        <a href="@($"employers/details?id={employer.Id}")">Details</a>
+        <AuthorizeView Roles="Administrator">
+            <span> | </span>
+            <a href="@($"employers/edit?id={employer.Id}")">Edit</a>
+            <span> | </span>
+            <a href="@($"employers/delete?id={employer.Id}")">Delete</a>
+        </AuthorizeView>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private SmoothCareersContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

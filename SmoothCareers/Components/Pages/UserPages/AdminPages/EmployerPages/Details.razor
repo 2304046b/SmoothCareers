@@ -1,0 +1,60 @@
+﻿@page "/employers/details"
+@using Microsoft.EntityFrameworkCore
+@using SmoothCareers.Domain
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Employer</h2>
+    <hr />
+    @if (employer is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">CompanyName</dt>
+            <dd class="col-sm-10">@employer.CompanyName</dd>
+            <dt class="col-sm-2">Industry</dt>
+            <dd class="col-sm-10">@employer.Industry</dd>
+            <dt class="col-sm-2">Location</dt>
+            <dd class="col-sm-10">@employer.Location</dd>
+            <dt class="col-sm-2">About</dt>
+            <dd class="col-sm-10">@employer.About</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@employer.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@employer.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@employer.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@employer.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/employers/edit?id={employer.Id}")">Edit</a> |
+            <a href="@($"/employers")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Employer? employer;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        employer = await context.Employer.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (employer is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

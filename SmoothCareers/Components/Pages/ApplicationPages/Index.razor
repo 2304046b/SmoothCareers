@@ -1,0 +1,43 @@
+﻿@page "/applications"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SmoothCareers.Domain
+@using SmoothCareers.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="applications/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Application">
+    <PropertyColumn Property="application => application.JobPostId" />
+    <PropertyColumn Property="application => application.JobSeekerId" />
+    <PropertyColumn Property="application => application.Status" />
+    <PropertyColumn Property="application => application.DateApplied" />
+    <PropertyColumn Property="application => application.DateCreated" />
+    <PropertyColumn Property="application => application.DateUpdated" />
+    <PropertyColumn Property="application => application.CreatedBy" />
+    <PropertyColumn Property="application => application.UpdatedBy" />
+
+    <TemplateColumn Context="application">
+        <a href="@($"applications/edit?id={application.Id}")">Edit</a> |
+        <a href="@($"applications/details?id={application.Id}")">Details</a> |
+        <a href="@($"applications/delete?id={application.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private SmoothCareersContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
