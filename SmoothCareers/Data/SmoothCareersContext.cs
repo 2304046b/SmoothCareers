@@ -31,5 +31,6 @@ namespace SmoothCareers.Data
 
         }
         public DbSet<SmoothCareers.Domain.Employer> Employer { get; set; } = default!;
+        public DbSet<SmoothCareers.Domain.Application> Application { get; set; } = default!;
     }
 }
