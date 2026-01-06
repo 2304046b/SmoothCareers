@@ -1,0 +1,79 @@
+﻿@page "/applications/create"
+@using Microsoft.EntityFrameworkCore
+@using SmoothCareers.Domain
+@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Application</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Application" OnValidSubmit="AddApplication" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="jobpostid" class="form-label">JobPostId:</label> 
+                <InputNumber id="jobpostid" @bind-Value="Application.JobPostId" class="form-control" /> 
+                <ValidationMessage For="() => Application.JobPostId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="jobseekerid" class="form-label">JobSeekerId:</label> 
+                <InputNumber id="jobseekerid" @bind-Value="Application.JobSeekerId" class="form-control" /> 
+                <ValidationMessage For="() => Application.JobSeekerId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label> 
+                <InputText id="status" @bind-Value="Application.Status" class="form-control" /> 
+                <ValidationMessage For="() => Application.Status" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateapplied" class="form-label">DateApplied:</label> 
+                <InputDate id="dateapplied" @bind-Value="Application.DateApplied" class="form-control" /> 
+                <ValidationMessage For="() => Application.DateApplied" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="Application.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => Application.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="Application.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => Application.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="Application.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Application.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="Application.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Application.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/applications">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Application Application { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddApplication()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Application.Add(Application);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/applications");
+    }
+}
