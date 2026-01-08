@@ -39,7 +39,9 @@
             <dd class="col-sm-10">@jobpost.UpdatedBy</dd>
         </dl>
         <div>
-            <a href="@($"/jobposts/edit?id={jobpost.Id}")">Edit</a> |
+            <AuthorizeView Roles="Administrator">
+                <a href="@($"/jobposts/edit?id={jobpost.Id}")">Edit</a> |
+            </AuthorizeView>
             <a href="@($"/jobposts")">Back to List</a>
         </div>
     }

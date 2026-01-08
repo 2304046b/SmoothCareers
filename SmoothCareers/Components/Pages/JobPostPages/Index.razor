@@ -5,8 +5,7 @@
 @using SmoothCareers.Data
 @implements IAsyncDisposable
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
-
-
+@using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Index</PageTitle>
 
@@ -32,9 +31,11 @@
     <PropertyColumn Property="jobpost => jobpost.UpdatedBy" />
 
     <TemplateColumn Context="jobpost">
-        <a href="@($"jobposts/edit?id={jobpost.Id}")">Edit</a> |
         <a href="@($"jobposts/details?id={jobpost.Id}")">Details</a> |
-        <a href="@($"jobposts/delete?id={jobpost.Id}")">Delete</a>
+        <AuthorizeView Roles="Administrator, Employer">
+            <a href="@($"jobposts/edit?id={jobpost.Id}")">Edit</a> |
+            <a href="@($"jobposts/delete?id={jobpost.Id}")">Delete</a>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 
