@@ -62,22 +62,22 @@
                 <InputDate id="dateposted" @bind-Value="JobPost.DatePosted" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.DatePosted" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="datecreated" class="form-label">DateCreated:</label> 
                 <InputDate id="datecreated" @bind-Value="JobPost.DateCreated" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.DateCreated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="dateupdated" class="form-label">DateUpdated:</label> 
                 <InputDate id="dateupdated" @bind-Value="JobPost.DateUpdated" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.DateUpdated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="createdby" class="form-label">CreatedBy:</label> 
                 <InputText id="createdby" @bind-Value="JobPost.CreatedBy" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.CreatedBy" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="updatedby" class="form-label">UpdatedBy:</label> 
                 <InputText id="updatedby" @bind-Value="JobPost.UpdatedBy" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.UpdatedBy" class="text-danger" /> 
@@ -95,10 +95,35 @@
     [SupplyParameterFromForm]
     private JobPost JobPost { get; set; } = new();
 
+    private string userId = "System";
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider authenticationStateProvider
+    //Override the OnInitialized method to get the user id.
+    protected override async void OnInitialized()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+    }
+
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddJobPost()
     {
         using var context = DbFactory.CreateDbContext();
+        
+        JobPost.CreatedBy = userId;
+        JobPost.UpdatedBy = userId;
+        //Set the DateCreated and DateUpdated fields to the current date and time.
+        JobPost.DateCreated = DateTime.Now;
+        JobPost.DateUpdated = DateTime.Now;
+        
+        
+        
         context.JobPost.Add(JobPost);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/jobposts");

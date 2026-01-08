@@ -106,9 +106,19 @@ else
 
     [SupplyParameterFromForm]
     private JobPost? JobPost { get; set; }
-
+    private string userId = "System";
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider authenticationStateProvider
     protected override async Task OnInitializedAsync()
     {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
         using var context = DbFactory.CreateDbContext();
         JobPost ??= await context.JobPost.FirstOrDefaultAsync(m => m.Id == Id);
 
@@ -123,6 +133,10 @@ else
     private async Task UpdateJobPost()
     {
         using var context = DbFactory.CreateDbContext();
+        JobPost.UpdatedBy = userId;
+        //Set the DateUpdated fields to the current date and time.
+        JobPost.DateUpdated = DateTime.Now;
+        
         context.Attach(JobPost!).State = EntityState.Modified;
 
         try

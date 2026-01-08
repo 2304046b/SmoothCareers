@@ -20,22 +20,22 @@
                 <InputText id="name" @bind-Value="JobType.Name" class="form-control" /> 
                 <ValidationMessage For="() => JobType.Name" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="datecreated" class="form-label">DateCreated:</label> 
                 <InputDate id="datecreated" @bind-Value="JobType.DateCreated" class="form-control" /> 
                 <ValidationMessage For="() => JobType.DateCreated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="dateupdated" class="form-label">DateUpdated:</label> 
                 <InputDate id="dateupdated" @bind-Value="JobType.DateUpdated" class="form-control" /> 
                 <ValidationMessage For="() => JobType.DateUpdated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="createdby" class="form-label">CreatedBy:</label> 
                 <InputText id="createdby" @bind-Value="JobType.CreatedBy" class="form-control" /> 
                 <ValidationMessage For="() => JobType.CreatedBy" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="updatedby" class="form-label">UpdatedBy:</label> 
                 <InputText id="updatedby" @bind-Value="JobType.UpdatedBy" class="form-control" /> 
                 <ValidationMessage For="() => JobType.UpdatedBy" class="text-danger" /> 
@@ -53,10 +53,32 @@
     [SupplyParameterFromForm]
     private JobType JobType { get; set; } = new();
 
+    private string userId = "System";
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider authenticationStateProvider
+    //Override the OnInitialized method to get the user id.
+    protected override async void OnInitialized()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+    }
+
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddJobType()
     {
         using var context = DbFactory.CreateDbContext();
+        JobType.CreatedBy = userId;
+        JobType.UpdatedBy = userId;
+        //Set the DateCreated and DateUpdated fields to the current date and time.
+        JobType.DateCreated = DateTime.Now;
+        JobType.DateUpdated = DateTime.Now;
+        
         context.JobType.Add(JobType);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/jobtypes");
