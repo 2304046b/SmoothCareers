@@ -2,42 +2,57 @@
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using SmoothCareers.Domain
-@using SmoothCareers.Data
+@using AppEntity = SmoothCareers.Domain.Application
 @implements IAsyncDisposable
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Applications</PageTitle>
 
-<h1>Index</h1>
+<h1>Applications</h1>
 
 <p>
-    <a href="applications/create">Create New</a>
+    <a href="/applications/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="context.Application">
-    <PropertyColumn Property="application => application.JobPostId" />
-    <PropertyColumn Property="application => application.JobSeekerId" />
-    <PropertyColumn Property="application => application.Status" />
-    <PropertyColumn Property="application => application.DateApplied" />
-    <PropertyColumn Property="application => application.DateCreated" />
-    <PropertyColumn Property="application => application.DateUpdated" />
-    <PropertyColumn Property="application => application.CreatedBy" />
-    <PropertyColumn Property="application => application.UpdatedBy" />
+<QuickGrid TGridItem="AppEntity"
+           Class="table"
+           Items="applications.AsQueryable()">
+
+    <PropertyColumn Property="a => a.JobPostId" Title="Job Post ID" />
+    <PropertyColumn Property="a => a.JobSeekerId" Title="Job Seeker ID" />
+    <PropertyColumn Property="a => a.Status" />
+    <PropertyColumn Property="a => a.DateApplied" />
+    <PropertyColumn Property="a => a.DateCreated" />
+    <PropertyColumn Property="a => a.DateUpdated" />
+    <PropertyColumn Property="a => a.CreatedBy" />
+    <PropertyColumn Property="a => a.UpdatedBy" />
 
     <TemplateColumn Context="application">
-        <a href="@($"applications/edit?id={application.Id}")">Edit</a> |
-        <a href="@($"applications/details?id={application.Id}")">Details</a> |
-        <a href="@($"applications/delete?id={application.Id}")">Delete</a>
+        <a href="@($"/applications/edit?id={application.Id}")">Edit</a> |
+        <a href="@($"/applications/details?id={application.Id}")">Details</a> |
+        <a href="@($"/applications/delete?id={application.Id}")">Delete</a>
     </TemplateColumn>
+
 </QuickGrid>
 
 @code {
-    private SmoothCareersContext context = default!;
+    private SmoothCareers.Data.SmoothCareersContext context = default!;
+    private List<AppEntity> applications = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
+
+        applications = await context.Application
+            .OrderByDescending(a => a.DateApplied)
+            .ToListAsync();
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        if (context != null)
+        {
+            await context.DisposeAsync();
+        }
+    }
 }

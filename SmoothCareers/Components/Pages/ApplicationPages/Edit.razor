@@ -20,7 +20,7 @@ else
         <div class="col-md-4">
             <EditForm method="post" Model="Application" OnValidSubmit="UpdateApplication" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
+                <ValidationSummary role="alert" />
                 <input type="hidden" name="Application.Id" value="@Application.Id" />
                 <div class="mb-3">
                     <label for="jobpostid" class="form-label">JobPostId:</label>

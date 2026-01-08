@@ -1,74 +1,107 @@
 ﻿@page "/applications/create"
 @using Microsoft.EntityFrameworkCore
 @using SmoothCareers.Domain
+@using AppEntity = SmoothCareers.Domain.Application
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Application</PageTitle>
 
-<h1>Create</h1>
-
-<h2>Application</h2>
+<h1>Create Application</h1>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Application" OnValidSubmit="AddApplication" FormName="create" Enhance>
+    <div class="col-md-5">
+        <EditForm Model="Application" OnValidSubmit="AddApplication">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" />
+
+            <!-- Job Post Dropdown -->
             <div class="mb-3">
-                <label for="jobpostid" class="form-label">JobPostId:</label> 
-                <InputNumber id="jobpostid" @bind-Value="Application.JobPostId" class="form-control" /> 
-                <ValidationMessage For="() => Application.JobPostId" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Job Post</label>
+                <InputSelect class="form-control" @bind-Value="Application.JobPostId">
+                    @foreach (var job in JobPosts)
+                    {
+                        <option value="@job.Id">@job.Title</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <!-- Job Seeker (Auto) -->
             <div class="mb-3">
-                <label for="jobseekerid" class="form-label">JobSeekerId:</label> 
-                <InputNumber id="jobseekerid" @bind-Value="Application.JobSeekerId" class="form-control" /> 
-                <ValidationMessage For="() => Application.JobSeekerId" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Job Seeker ID</label>
+                <InputNumber class="form-control" @bind-Value="Application.JobSeekerId" disabled />
+            </div>
+
+            <!-- Status (Auto) -->
             <div class="mb-3">
-                <label for="status" class="form-label">Status:</label> 
-                <InputText id="status" @bind-Value="Application.Status" class="form-control" /> 
-                <ValidationMessage For="() => Application.Status" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Status</label>
+                <InputText class="form-control" @bind-Value="Application.Status" disabled />
+            </div>
+
+            <!-- Dates (Auto) -->
             <div class="mb-3">
-                <label for="dateapplied" class="form-label">DateApplied:</label> 
-                <InputDate id="dateapplied" @bind-Value="Application.DateApplied" class="form-control" /> 
-                <ValidationMessage For="() => Application.DateApplied" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Date Applied</label>
+                <InputDate class="form-control" @bind-Value="Application.DateApplied" disabled />
+            </div>
+
             <div class="mb-3">
-                <label for="datecreated" class="form-label">DateCreated:</label> 
-                <InputDate id="datecreated" @bind-Value="Application.DateCreated" class="form-control" /> 
-                <ValidationMessage For="() => Application.DateCreated" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Date Created</label>
+                <InputDate class="form-control" @bind-Value="Application.DateCreated" disabled />
+            </div>
+
             <div class="mb-3">
-                <label for="dateupdated" class="form-label">DateUpdated:</label> 
-                <InputDate id="dateupdated" @bind-Value="Application.DateUpdated" class="form-control" /> 
-                <ValidationMessage For="() => Application.DateUpdated" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Date Updated</label>
+                <InputDate class="form-control" @bind-Value="Application.DateUpdated" disabled />
+            </div>
+
+            <!-- Created / Updated By -->
             <div class="mb-3">
-                <label for="createdby" class="form-label">CreatedBy:</label> 
-                <InputText id="createdby" @bind-Value="Application.CreatedBy" class="form-control" /> 
-                <ValidationMessage For="() => Application.CreatedBy" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Created By</label>
+                <InputSelect class="form-control" @bind-Value="Application.CreatedBy">
+                    <option value="caven">caven</option>
+                    <option value="others">others</option>
+                </InputSelect>
+            </div>
+
             <div class="mb-3">
-                <label for="updatedby" class="form-label">UpdatedBy:</label> 
-                <InputText id="updatedby" @bind-Value="Application.UpdatedBy" class="form-control" /> 
-                <ValidationMessage For="() => Application.UpdatedBy" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label class="form-label">Updated By</label>
+                <InputSelect class="form-control" @bind-Value="Application.UpdatedBy">
+                    <option value="caven">caven</option>
+                    <option value="others">others</option>
+                </InputSelect>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Apply</button>
         </EditForm>
     </div>
 </div>
 
-<div>
+<div class="mt-3">
     <a href="/applications">Back to List</a>
 </div>
 
 @code {
-    [SupplyParameterFromForm]
-    private Application Application { get; set; } = new();
+    private AppEntity Application { get; set; } = new();
+    private List<JobPost> JobPosts = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        JobPosts = await context.JobPost.ToListAsync();
+
+        // Defaults
+        Application.JobPostId = 1;
+        Application.JobSeekerId = 1;
+        Application.Status = "Pending";
+        Application.DateApplied = DateTime.Today;
+        Application.DateCreated = DateTime.Today;
+        Application.DateUpdated = DateTime.Today;
+        Application.CreatedBy = "caven";
+        Application.UpdatedBy = "caven";
+    }
+
     private async Task AddApplication()
     {
         using var context = DbFactory.CreateDbContext();

@@ -1,7 +1,8 @@
-﻿@page "/jobposts/details"
+@page "/jobposts/details"
 @using Microsoft.EntityFrameworkCore
 @using SmoothCareers.Domain
-@inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
+@using SmoothCareers.Data
+@inject IDbContextFactory<SmoothCareersContext> DbFactory
 @inject NavigationManager NavigationManager
 
 <PageTitle>Details</PageTitle>
@@ -15,30 +16,44 @@
     {
         <p><em>Loading...</em></p>
     }
-    else {
+    else
+    {
         <dl class="row">
             <dt class="col-sm-2">EmployerId</dt>
             <dd class="col-sm-10">@jobpost.EmployerId</dd>
+
             <dt class="col-sm-2">Title</dt>
             <dd class="col-sm-10">@jobpost.Title</dd>
+
             <dt class="col-sm-2">Description</dt>
             <dd class="col-sm-10">@jobpost.Description</dd>
+
             <dt class="col-sm-2">Location</dt>
             <dd class="col-sm-10">@jobpost.Location</dd>
+
             <dt class="col-sm-2">Salary</dt>
             <dd class="col-sm-10">@jobpost.Salary</dd>
+
             <dt class="col-sm-2">DatePosted</dt>
             <dd class="col-sm-10">@jobpost.DatePosted</dd>
+
             <dt class="col-sm-2">DateCreated</dt>
             <dd class="col-sm-10">@jobpost.DateCreated</dd>
+
             <dt class="col-sm-2">DateUpdated</dt>
             <dd class="col-sm-10">@jobpost.DateUpdated</dd>
+
             <dt class="col-sm-2">CreatedBy</dt>
             <dd class="col-sm-10">@jobpost.CreatedBy</dd>
+
             <dt class="col-sm-2">UpdatedBy</dt>
             <dd class="col-sm-10">@jobpost.UpdatedBy</dd>
         </dl>
+
         <div>
+            <a href="@($"/jobposts/edit?id={jobpost.Id}")">Edit</a> |
+            <a href="/savedjobs">Save Job</a> |
+            <a href="/jobposts">Back to List</a>
             <AuthorizeView Roles="Administrator">
                 <a href="@($"/jobposts/edit?id={jobpost.Id}")">Edit</a> |
             </AuthorizeView>
