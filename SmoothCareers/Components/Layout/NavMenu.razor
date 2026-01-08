@@ -16,7 +16,25 @@
             </NavLink>
         </div>
 
-        
+        <AuthorizeView Roles="Administrator" Context="innerContext">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="employers">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> employers
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="jobtypes">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Job Types
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="workarrangements">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Work Arrangements
+                </NavLink>
+            </div>
+        </AuthorizeView>
+
+
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
@@ -35,21 +53,7 @@
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Job Posts
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="employers">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> employers
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="jobtypes">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Job Types
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="workarrangements">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Work Arrangements
-                    </NavLink>
-                </div>
+               
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="applications">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> applications
