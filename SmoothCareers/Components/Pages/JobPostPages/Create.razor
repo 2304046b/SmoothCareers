@@ -3,6 +3,8 @@
 @using SmoothCareers.Domain
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrator, Employer")]
 
 <PageTitle>Create</PageTitle>
 

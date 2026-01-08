@@ -11,7 +11,10 @@
 <h1>Index</h1>
 
 <p>
+    <AuthorizeView Roles="Administrator, Employer">
     <a href="jobposts/create">Create New</a>
+    </AuthorizeView>
+
 </p>
 
 <QuickGrid Class="table" Items="context.JobPost">
@@ -30,9 +33,12 @@
     <PropertyColumn Property="jobpost => jobpost.UpdatedBy" />
 
     <TemplateColumn Context="jobpost">
-        <a href="@($"jobposts/edit?id={jobpost.Id}")">Edit</a> |
         <a href="@($"jobposts/details?id={jobpost.Id}")">Details</a> |
-        <a href="@($"jobposts/delete?id={jobpost.Id}")">Delete</a>
+        <AuthorizeView Roles="Administrator, Employer">
+            <a href="@($"jobposts/edit?id={jobpost.Id}")">Edit</a> |
+            <a href="@($"jobposts/delete?id={jobpost.Id}")">Delete</a> |
+        </AuthorizeView>
+
     </TemplateColumn>
 </QuickGrid>
 
