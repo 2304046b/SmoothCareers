@@ -36,22 +36,22 @@
                 <InputText id="about" @bind-Value="Employer.About" class="form-control" /> 
                 <ValidationMessage For="() => Employer.About" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="datecreated" class="form-label">DateCreated:</label> 
                 <InputDate id="datecreated" @bind-Value="Employer.DateCreated" class="form-control" /> 
                 <ValidationMessage For="() => Employer.DateCreated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="dateupdated" class="form-label">DateUpdated:</label> 
                 <InputDate id="dateupdated" @bind-Value="Employer.DateUpdated" class="form-control" /> 
                 <ValidationMessage For="() => Employer.DateUpdated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="createdby" class="form-label">CreatedBy:</label> 
                 <InputText id="createdby" @bind-Value="Employer.CreatedBy" class="form-control" /> 
                 <ValidationMessage For="() => Employer.CreatedBy" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="updatedby" class="form-label">UpdatedBy:</label> 
                 <InputText id="updatedby" @bind-Value="Employer.UpdatedBy" class="form-control" /> 
                 <ValidationMessage For="() => Employer.UpdatedBy" class="text-danger" /> 
@@ -68,11 +68,35 @@
 @code {
     [SupplyParameterFromForm]
     private Employer Employer { get; set; } = new();
+    //Create userId string to store the user id, default value is "System".
+    private string userId = "System";
+    @inject AuthenticationStateProvider authenticationStateProvider
+    //Inject the AuthenticationStateProvider to get the user id.
 
+    //Override the OnInitialized method to get the user id.
+    protected override async void OnInitialized()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+    }
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddEmployer()
     {
         using var context = DbFactory.CreateDbContext();
+        //Set the userId to the CreatedBy and UpdatedBy fields.
+        Employer.CreatedBy = userId;
+        Employer.UpdatedBy = userId;
+        //Set the DateCreated and DateUpdated fields to the current date and time.
+        Employer.DateCreated = DateTime.Now;
+        Employer.DateUpdated = DateTime.Now;
+        
+        
         context.Employer.Add(Employer);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/employers");
