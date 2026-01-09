@@ -5,9 +5,11 @@ namespace SmoothCareers.Domain
 
     public class Employer : BaseDomainModel
     {
-      // Employer.cs
+        // Employer.cs
+        public string Name { get; set; } = string.Empty;
 
-            public string CompanyName { get; set; } = string.Empty;
+
+        public string CompanyName { get; set; } = string.Empty;
             public string Industry { get; set; } = string.Empty;
             public string Location { get; set; } = string.Empty;
             public string? About { get; set; }

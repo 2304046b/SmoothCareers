@@ -18,22 +18,29 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="employerid" class="form-label">EmployerId:</label> 
+                <label for="employerid" class="form-label">Employer:</label> 
+                
+                
                 <InputNumber id="employerid" @bind-Value="JobPost.EmployerId" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.EmployerId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="jobcategoryid" class="form-label">JobCategoryId:</label> 
+                <label for="jobcategoryid" class="form-label">JobCategory:</label> 
+                //
+                
+               
                 <InputNumber id="jobcategoryid" @bind-Value="JobPost.JobCategoryId" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.JobCategoryId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="jobtypeid" class="form-label">JobTypeId:</label> 
+                //
                 <InputNumber id="jobtypeid" @bind-Value="JobPost.JobTypeId" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.JobTypeId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="workarrangementid" class="form-label">WorkArrangementId:</label> 
+                //
                 <InputNumber id="workarrangementid" @bind-Value="JobPost.WorkArrangementId" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.WorkArrangementId" class="text-danger" /> 
             </div>        
@@ -95,12 +102,27 @@
     [SupplyParameterFromForm]
     private JobPost JobPost { get; set; } = new();
 
+    private SmoothCareersContext context = default!;
+    private IList<Employer> Employers = new List<Employer>();
+    private IList<JobCategory> JobCategories = new List<JobCategory>();
+    private IList<JobType> JobTypes = new List<JobType>();
+    private IList<WorkArrangement> WorkArrangements = new List<WorkArrangement>();
+
+    //OnInitialized method to get all Makes, Models and Colours
+ 
+
     private string userId = "System";
     //Inject the AuthenticationStateProvider to get the user id.
     @inject AuthenticationStateProvider authenticationStateProvider
     //Override the OnInitialized method to get the user id.
     protected override async void OnInitialized()
     {
+        context = DbFactory.CreateDbContext();
+
+        Employers = context.Employer.ToList();
+        JobCategories = context.JobCategory.ToList();
+        JobTypes = context.JobType.ToList();
+        WorkArrangements = context.WorkArrangement.ToList();
         var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         // Get the userId claim
