@@ -17,33 +17,66 @@
         <EditForm method="post" Model="JobPost" OnValidSubmit="AddJobPost" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
+            @*
             <div class="mb-3">
                 <label for="employerid" class="form-label">Employer:</label> 
                 
                 
                 <InputNumber id="employerid" @bind-Value="JobPost.EmployerId" class="form-control" /> 
                 <ValidationMessage For="() => JobPost.EmployerId" class="text-danger" /> 
-            </div>        
+            </div>   
+            *@
             <div class="mb-3">
-                <label for="jobcategoryid" class="form-label">JobCategory:</label> 
-                //
-                
-               
-                <InputNumber id="jobcategoryid" @bind-Value="JobPost.JobCategoryId" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.JobCategoryId" class="text-danger" /> 
-            </div>        
+                <label for="jobcategoryid" class="form-label">Job Category:</label>
+
+                <InputSelect id="jobcategoryid" class="form-select" @bind-Value="JobPost.JobCategoryId">
+                    <option value="">-- Select Job Category --</option>
+                    @if (JobCategories is not null)
+                    {
+                        foreach (var jobcategory in JobCategories)
+                        {
+                            <option value="@jobcategory.Id">@jobcategory.Name</option>
+                        }
+                    }
+                </InputSelect>
+
+                <ValidationMessage For="@(() => JobPost.JobCategoryId)" class="text-danger" />
+            </div>
+
             <div class="mb-3">
-                <label for="jobtypeid" class="form-label">JobTypeId:</label> 
-                //
-                <InputNumber id="jobtypeid" @bind-Value="JobPost.JobTypeId" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.JobTypeId" class="text-danger" /> 
-            </div>        
+                <label for="jobtypeid" class="form-label">Job Type:</label>
+
+                <InputSelect id="jobtypeid" class="form-select" @bind-Value="JobPost.JobTypeId">
+                    <option value="">-- Select Job Type --</option>
+                    @if (JobTypes is not null)
+                    {
+                        foreach (var jobtype in JobTypes)
+                        {
+                            <option value="@jobtype.Id">@jobtype.Name</option>
+                        }
+                    }
+                </InputSelect>
+
+                <ValidationMessage For="@(() => JobPost.JobTypeId)" class="text-danger" />
+            </div>
+
             <div class="mb-3">
-                <label for="workarrangementid" class="form-label">WorkArrangementId:</label> 
-                //
-                <InputNumber id="workarrangementid" @bind-Value="JobPost.WorkArrangementId" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.WorkArrangementId" class="text-danger" /> 
-            </div>        
+                <label for="workarrangementid" class="form-label">Work Arrangement:</label>
+
+                <InputSelect id="workarrangementid" class="form-select" @bind-Value="JobPost.WorkArrangementId">
+                    <option value="">-- Select Work Arrangement --</option>
+                    @if (WorkArrangements is not null)
+                    {
+                        foreach (var wa in WorkArrangements)
+                        {
+                            <option value="@wa.Id">@wa.Name</option>
+                        }
+                    }
+                </InputSelect>
+
+                <ValidationMessage For="@(() => JobPost.WorkArrangementId)" class="text-danger" />
+            </div>
+
             <div class="mb-3">
                 <label for="title" class="form-label">Title:</label> 
                 <InputText id="title" @bind-Value="JobPost.Title" class="form-control" /> 
@@ -119,7 +152,7 @@
     {
         context = DbFactory.CreateDbContext();
 
-        Employers = context.Employer.ToList();
+        @*Employers = context.Employer.ToList();*@
         JobCategories = context.JobCategory.ToList();
         JobTypes = context.JobType.ToList();
         WorkArrangements = context.WorkArrangement.ToList();
