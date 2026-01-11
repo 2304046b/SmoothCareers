@@ -63,9 +63,19 @@ else
 
     [SupplyParameterFromForm]
     private WorkArrangement? WorkArrangement { get; set; }
-
+    private string userId = "System";
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider authenticationStateProvider
     protected override async Task OnInitializedAsync()
     {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
         using var context = DbFactory.CreateDbContext();
         WorkArrangement ??= await context.WorkArrangement.FirstOrDefaultAsync(m => m.Id == Id);
 
@@ -80,6 +90,10 @@ else
     private async Task UpdateWorkArrangement()
     {
         using var context = DbFactory.CreateDbContext();
+        WorkArrangement.UpdatedBy = userId;
+        //Set the DateUpdated fields to the current date and time.
+        WorkArrangement.DateUpdated = DateTime.Now;
+        
         context.Attach(WorkArrangement!).State = EntityState.Modified;
 
         try

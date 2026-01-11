@@ -20,22 +20,22 @@
                 <InputText id="name" @bind-Value="WorkArrangement.Name" class="form-control" /> 
                 <ValidationMessage For="() => WorkArrangement.Name" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="datecreated" class="form-label">DateCreated:</label> 
                 <InputDate id="datecreated" @bind-Value="WorkArrangement.DateCreated" class="form-control" /> 
                 <ValidationMessage For="() => WorkArrangement.DateCreated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="dateupdated" class="form-label">DateUpdated:</label> 
                 <InputDate id="dateupdated" @bind-Value="WorkArrangement.DateUpdated" class="form-control" /> 
                 <ValidationMessage For="() => WorkArrangement.DateUpdated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="createdby" class="form-label">CreatedBy:</label> 
                 <InputText id="createdby" @bind-Value="WorkArrangement.CreatedBy" class="form-control" /> 
                 <ValidationMessage For="() => WorkArrangement.CreatedBy" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="updatedby" class="form-label">UpdatedBy:</label> 
                 <InputText id="updatedby" @bind-Value="WorkArrangement.UpdatedBy" class="form-control" /> 
                 <ValidationMessage For="() => WorkArrangement.UpdatedBy" class="text-danger" /> 
@@ -52,11 +52,31 @@
 @code {
     [SupplyParameterFromForm]
     private WorkArrangement WorkArrangement { get; set; } = new();
-
+    private string userId = "System";
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider authenticationStateProvider
+    //Override the OnInitialized method to get the user id.
+    protected override async void OnInitialized()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+    }
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddWorkArrangement()
     {
         using var context = DbFactory.CreateDbContext();
+        WorkArrangement.CreatedBy = userId;
+        WorkArrangement.UpdatedBy = userId;
+        //Set the DateCreated and DateUpdated fields to the current date and time.
+        WorkArrangement.DateCreated = DateTime.Now;
+        WorkArrangement.DateUpdated = DateTime.Now;
+        
         context.WorkArrangement.Add(WorkArrangement);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/workarrangements");

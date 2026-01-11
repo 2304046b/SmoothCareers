@@ -78,9 +78,28 @@ else
 
     [SupplyParameterFromForm]
     private Employer? Employer { get; set; }
+    //Create userId string to store the user id, default value is "System".
+    
+    
+    
+    
+    
+    private string userId = "System";
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider authenticationStateProvider
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+
         using var context = DbFactory.CreateDbContext();
         Employer ??= await context.Employer.FirstOrDefaultAsync(m => m.Id == Id);
 
@@ -95,6 +114,10 @@ else
     private async Task UpdateEmployer()
     {
         using var context = DbFactory.CreateDbContext();
+        //Set the userId to the UpdatedBy fields.
+        Employer.UpdatedBy = userId;
+        //Set the DateUpdated fields to the current date and time.
+        Employer.DateUpdated = DateTime.Now;
         context.Attach(Employer!).State = EntityState.Modified;
 
         try

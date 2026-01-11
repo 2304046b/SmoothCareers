@@ -3,8 +3,8 @@
 @using SmoothCareers.Domain
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 @inject NavigationManager NavigationManager
-@attribute [Authorize(Roles = "Administrator, Employer")]
 @using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrator, Employer")]
 
 <PageTitle>Delete</PageTitle>
 
@@ -22,6 +22,18 @@
         <dl class="row">
             <dt class="col-sm-2">EmployerId</dt>
             <dd class="col-sm-10">@jobpost.EmployerId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">JobCategoryId</dt>
+            <dd class="col-sm-10">@jobpost.JobCategoryId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">JobTypeId</dt>
+            <dd class="col-sm-10">@jobpost.JobTypeId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">WorkArrangementId</dt>
+            <dd class="col-sm-10">@jobpost.WorkArrangementId</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">Title</dt>

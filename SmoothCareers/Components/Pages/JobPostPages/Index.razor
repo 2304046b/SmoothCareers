@@ -5,20 +5,23 @@
 @using SmoothCareers.Data
 @implements IAsyncDisposable
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
-@using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Index</PageTitle>
 
 <h1>Index</h1>
 
 <p>
-    <AuthorizeView Roles="Administrator,Employer">
-        <a href="jobposts/create">Create New</a>
+    <AuthorizeView Roles="Administrator, Employer">
+    <a href="jobposts/create">Create New</a>
     </AuthorizeView>
+
 </p>
 
 <QuickGrid Class="table" Items="context.JobPost">
     <PropertyColumn Property="jobpost => jobpost.EmployerId" />
+    <PropertyColumn Property="jobpost => jobpost.JobCategoryId" />
+    <PropertyColumn Property="jobpost => jobpost.JobTypeId" />
+    <PropertyColumn Property="jobpost => jobpost.WorkArrangementId" />
     <PropertyColumn Property="jobpost => jobpost.Title" />
     <PropertyColumn Property="jobpost => jobpost.Description" />
     <PropertyColumn Property="jobpost => jobpost.Location" />
@@ -33,8 +36,9 @@
         <a href="@($"jobposts/details?id={jobpost.Id}")">Details</a> |
         <AuthorizeView Roles="Administrator, Employer">
             <a href="@($"jobposts/edit?id={jobpost.Id}")">Edit</a> |
-            <a href="@($"jobposts/delete?id={jobpost.Id}")">Delete</a>
+            <a href="@($"jobposts/delete?id={jobpost.Id}")">Delete</a> |
         </AuthorizeView>
+
     </TemplateColumn>
 </QuickGrid>
 
