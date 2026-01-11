@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmoothCareers.Data;
 
@@ -11,9 +12,11 @@ using SmoothCareers.Data;
 namespace SmoothCareers.Migrations
 {
     [DbContext(typeof(SmoothCareersContext))]
-    partial class SmoothCareersContextModelSnapshot : ModelSnapshot
+    [Migration("20260110145516_AddSavedJobs")]
+    partial class AddSavedJobs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,15 +270,15 @@ namespace SmoothCareers.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b65b72bf-cdae-49b0-a0cc-fcb149f33cdb",
+                            ConcurrencyStamp = "b1fbe51d-dc83-4939-bdda-5569b9283abe",
                             Email = "admin@smoothcareers.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@SMOOTHCAREERS.COM",
                             NormalizedUserName = "ADMIN@SMOOTHCAREERS.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE3CX4S7hGqhMoof6Lwiz0sftqbpK8LIPjkvT5wnMRbYyQX0++Rer9SzHpKP3h3JHw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOBwRWPQyCfh46682Kbjv9BhSZ9RXeJdZ/5tBvjDFLFXIiHvAzxHLquNgBBstMQpAQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "01b37684-d0b2-411e-b28b-6f4b03f9174a",
+                            SecurityStamp = "e0f5bb60-7d94-455b-b5eb-bf6c070415cb",
                             TwoFactorEnabled = false,
                             UserName = "admin@smoothcareers.com"
                         },
@@ -283,15 +286,15 @@ namespace SmoothCareers.Migrations
                         {
                             Id = "b1a2c3d4-e5f6-47a8-9b01-112233445566",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4f899f22-3c1b-459b-8da8-9d2dfcd0f176",
+                            ConcurrencyStamp = "d9eee033-aa71-4be2-a974-f399735b010d",
                             Email = "employer@smoothcareers.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER@SMOOTHCAREERS.COM",
                             NormalizedUserName = "EMPLOYER@SMOOTHCAREERS.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEExOteglzeDmeYdxWze0vCIY4G7VIEJFHW8kFPciSD1wTfMsA0po2j36tvBl/l8LBQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOv9yAcPUEoEcauPoFTccX0siKAgiis9McmZyhj3q/KiO04fogBWIiWGCRLM9NUz3w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4f8e07bc-c8a4-4f14-b43c-f349a47388c1",
+                            SecurityStamp = "8cc070ac-15dc-4c7c-921d-2c90e5ffcbe4",
                             TwoFactorEnabled = false,
                             UserName = "employer@smoothcareers.com"
                         },
@@ -299,15 +302,15 @@ namespace SmoothCareers.Migrations
                         {
                             Id = "c2b3a4d5-e6f7-48b9-8c02-667788990011",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "40291fdf-36ff-4d00-850b-73630af9413a",
+                            ConcurrencyStamp = "5d53824a-ee72-4c92-8174-92e11e862f41",
                             Email = "jobseeker@smoothcareers.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JOBSEEKER@SMOOTHCAREERS.COM",
                             NormalizedUserName = "JOBSEEKER@SMOOTHCAREERS.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEB7xN8w87eIYJLqiqcz+CPj7iI8XviepdLZQSz/6KxHA8xVoy/8CVdF5Y1M+wvaX4Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPX6d74gNMIomCW75afpZp6BnWMfwBcq2B0fO/upy7lAasGTsVsijKbtjYPkMBwLnQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b61a0610-8163-45f8-ac39-e3ebc197be2b",
+                            SecurityStamp = "badf6c7d-29ed-4a09-969b-e7cc3a7dbd29",
                             TwoFactorEnabled = false,
                             UserName = "jobseeker@smoothcareers.com"
                         });
@@ -439,8 +442,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8871),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8881),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6309),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6325),
                             Name = "Software Engineering",
                             UpdatedBy = "System"
                         },
@@ -448,8 +451,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8883),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8884),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6327),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6328),
                             Name = "Data & Analytics",
                             UpdatedBy = "System"
                         },
@@ -457,8 +460,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8885),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8886),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6329),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6330),
                             Name = "Cybersecurity",
                             UpdatedBy = "System"
                         },
@@ -466,8 +469,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 4,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8887),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8888),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6331),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6331),
                             Name = "UI/UX Design",
                             UpdatedBy = "System"
                         },
@@ -475,8 +478,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 5,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8889),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8889),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6333),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6333),
                             Name = "IT Support",
                             UpdatedBy = "System"
                         },
@@ -484,8 +487,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 6,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8890),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(8891),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6334),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6335),
                             Name = "Business & Operations",
                             UpdatedBy = "System"
                         });
@@ -777,8 +780,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9051),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9052),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6566),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6566),
                             Name = "Full-Time",
                             UpdatedBy = "System"
                         },
@@ -786,8 +789,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9053),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9054),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6568),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6568),
                             Name = "Part-Time",
                             UpdatedBy = "System"
                         },
@@ -795,8 +798,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9055),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9055),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6570),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6570),
                             Name = "Internship",
                             UpdatedBy = "System"
                         },
@@ -804,8 +807,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 4,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9057),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9057),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6571),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6572),
                             Name = "Contract",
                             UpdatedBy = "System"
                         },
@@ -813,8 +816,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 5,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9058),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9059),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6573),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6573),
                             Name = "Temporary",
                             UpdatedBy = "System"
                         });
@@ -828,7 +831,16 @@ namespace SmoothCareers.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateSaved")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("JobPostId")
@@ -836,6 +848,9 @@ namespace SmoothCareers.Migrations
 
                     b.Property<string>("SavedByUserId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -878,8 +893,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9467),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9467),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6920),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6920),
                             Name = "Onsite",
                             UpdatedBy = "System"
                         },
@@ -887,8 +902,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9469),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9469),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6922),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6922),
                             Name = "Hybrid",
                             UpdatedBy = "System"
                         },
@@ -896,8 +911,8 @@ namespace SmoothCareers.Migrations
                         {
                             Id = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9470),
-                            DateUpdated = new DateTime(2026, 1, 11, 12, 56, 0, 591, DateTimeKind.Local).AddTicks(9471),
+                            DateCreated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6924),
+                            DateUpdated = new DateTime(2026, 1, 10, 22, 55, 15, 162, DateTimeKind.Local).AddTicks(6924),
                             Name = "Remote",
                             UpdatedBy = "System"
                         });

@@ -1,17 +1,73 @@
 ﻿@page "/savedjobs"
+@using Microsoft.EntityFrameworkCore
+@using SmoothCareers.Domain
+@using SmoothCareers.Data
+@inject IDbContextFactory<SmoothCareersContext> DbFactory
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Saved Jobs</PageTitle>
 
-<h3>Saved Jobs</h3>
+<h2>Saved Jobs</h2>
 
-<p>
-    This page is currently a placeholder for the Saved Jobs feature.
-</p>
+@if (!loaded)
+{
+    <p><em>Loading...</em></p>
+}
+else if (savedJobs.Count == 0)
+{
+    <p>No saved jobs yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Date Saved</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in savedJobs)
+            {
+                <tr>
+                    <td>@job.JobPost?.Title</td>
+                    <td>@job.JobPost?.Location</td>
+                    <td>@job.DateSaved.ToLocalTime()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-<p>
-    You will be able to view jobs you have saved here.
-</p>
+@code {
+    private List<SavedJob> savedJobs = new();
+    private bool loaded = false;
 
-<div class="mt-3">
-    <a href="/jobposts">Back to Job Posts</a>
-</div>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // ✅ CORRECT + REQUIRED claim
+        var userId = user.FindFirst(
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        )?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            loaded = true;
+            return;
+        }
+
+        using var context = DbFactory.CreateDbContext();
+
+        savedJobs = await context.SavedJob
+            .Include(s => s.JobPost)
+            .Where(s => s.SavedByUserId == userId)
+            .OrderByDescending(s => s.DateSaved)
+            .ToListAsync();
+
+        loaded = true;
+    }
+}

@@ -1,0 +1,118 @@
+﻿@page "/employer/applications"
+@using Microsoft.EntityFrameworkCore
+@using SmoothCareers.Domain
+@using SmoothCareers.Data
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrator, Employer")]
+@inject IDbContextFactory<SmoothCareersContext> DbFactory
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+<PageTitle>Applications</PageTitle>
+
+<h2>Job Applications</h2>
+
+@if (!loaded)
+{
+    <p><em>Loading...</em></p>
+}
+else if (applications.Count == 0)
+{
+    <p>No applications received yet.</p>
+}
+else
+{
+    <button class="btn btn-secondary mb-2" @onclick="LoadApplications">Refresh</button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Applicant Name</th>
+                <th>Email</th>
+                <th>Date Applied</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var app in applications)
+            {
+                <tr>
+                    <td>@app.JobPost?.Title</td>
+                    <td>@app.JobSeeker?.FullName</td>
+                    <td>@app.JobSeeker?.Email</td>
+                    <td>@app.DateApplied.ToLocalTime()</td>
+                    <td>@app.Status</td>
+                    <td>
+                        @if (app.Status == "Pending")
+                        {
+                            <button class="btn btn-success btn-sm me-1" @onclick='() => UpdateStatus(app, "Accepted")'>Accept</button>
+                            <button class="btn btn-danger btn-sm" @onclick='() => UpdateStatus(app, "Rejected")'>Reject</button>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Reviewed</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Application> applications = new();
+    private bool loaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadApplications();
+    }
+
+    private async Task LoadApplications()
+    {
+        loaded = false;
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var employerEmail = user.Identity?.Name;
+
+        if (string.IsNullOrEmpty(employerEmail))
+        {
+            loaded = true;
+            return;
+        }
+
+        using var context = DbFactory.CreateDbContext();
+
+        applications = await context.Application
+            .Include(a => a.JobPost)
+            .Include(a => a.JobSeeker)
+            .Where(a => a.JobPost!.CreatedBy == employerEmail)
+            .OrderByDescending(a => a.DateApplied)
+            .ToListAsync();
+
+        loaded = true;
+        StateHasChanged();
+    }
+
+    private async Task UpdateStatus(Application app, string newStatus)
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        var applicationInDb = await context.Application.FirstOrDefaultAsync(a => a.Id == app.Id);
+        if (applicationInDb != null)
+        {
+            applicationInDb.Status = newStatus;
+            applicationInDb.DateUpdated = DateTime.UtcNow;
+            await context.SaveChangesAsync();
+
+            // Update UI immediately
+            app.Status = newStatus;
+            app.DateUpdated = applicationInDb.DateUpdated;
+
+            await JS.InvokeVoidAsync("alert", $"Application {newStatus}!");
+        }
+    }
+}

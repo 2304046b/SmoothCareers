@@ -8,13 +8,11 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
+<h1>Create Job Post</h1>
 
-<h2>JobPost</h2>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="JobPost" OnValidSubmit="AddJobPost" FormName="create" Enhance>
+    <div class="col-md-6">
+        <EditForm Model="JobPost" OnValidSubmit="AddJobPost">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             @*
@@ -127,12 +125,11 @@
     </div>
 </div>
 
-<div>
-    <a href="/jobposts">Back to List</a>
+<div class="mt-3">
+    <a href="/jobposts">Back to Job Posts List</a>
 </div>
 
 @code {
-    [SupplyParameterFromForm]
     private JobPost JobPost { get; set; } = new();
 
     private SmoothCareersContext context = default!;
@@ -181,6 +178,7 @@
         
         context.JobPost.Add(JobPost);
         await context.SaveChangesAsync();
+
         NavigationManager.NavigateTo("/jobposts");
     }
 }

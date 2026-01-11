@@ -1,0 +1,66 @@
+﻿@page "/findcompany"
+@using SmoothCareers.Domain
+
+<PageTitle>Find Company</PageTitle>
+
+<h2>Find Company</h2>
+
+@if (!loaded)
+{
+    <p><em>Loading...</em></p>
+}
+else if (companies.Count == 0)
+{
+    <p>No companies found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Salary</th>
+                <th>Date Posted</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in companies)
+            {
+                <tr>
+                    <td>@job.Title</td>
+                    <td>@job.Description</td>
+                    <td>@job.Location</td>
+                    <td>@string.Format("{0:C0}", job.Salary)</td>
+                    <td>@job.DatePosted.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<JobPost> companies = new();
+    private bool loaded = false;
+
+    protected override void OnInitialized()
+    {
+        // Hardcoded example jobs from a single company (EmployerId = 1)
+        companies = new List<JobPost>
+        {
+            new JobPost { EmployerId = 1, Title = "Junior Full-Stack Developer (.NET)", Description = "Build CRUD features with ASP.NET Core MVC, EF Core, SQL Server. Work with Git branching and code reviews.", Location = "Singapore (Tampines)", Salary = 4200m, DatePosted = new DateTime(2026,2,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "RPA Developer (Intern) - UiPath", Description = "Support automation workflows for Outlook/Excel and document processes. Basic regex and debugging is a plus.", Location = "Singapore (Remote)", Salary = 1200m, DatePosted = new DateTime(2026,3,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "Data Analyst (Entry-Level)", Description = "Clean and analyze datasets using Python (Pandas) and build visual insights. Basic SQL required.", Location = "Singapore (Central)", Salary = 3800m, DatePosted = new DateTime(2026,3,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "UI/UX Designer (Intern)", Description = "Create wireframes, user flows, and prototypes in Figma. Assist with usability testing and design systems.", Location = "Singapore (CBD)", Salary = 1200m, DatePosted = new DateTime(2026,4,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "IT Support Technician (Hospital)", Description = "Provide onsite support: Windows troubleshooting, printer issues, domain join, OneDrive/Outlook setup.", Location = "Singapore (Central)", Salary = 2800m, DatePosted = new DateTime(2026,4,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "Software QA Tester (Contract)", Description = "Execute test cases, report defects, and validate fixes. Exposure to test automation is a plus.", Location = "Singapore (East)", Salary = 3200m, DatePosted = new DateTime(2026,5,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "Network Support Engineer (Entry-Level)", Description = "Assist with networking tasks: IP config, connectivity troubleshooting, and basic device setup.", Location = "Singapore (North)", Salary = 3400m, DatePosted = new DateTime(2026,5,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "Web Developer (Part-Time)", Description = "Maintain site pages, fix UI bugs, and implement small features. HTML/CSS/JS and basic .NET helpful.", Location = "Singapore (Hybrid)", Salary = 2200m, DatePosted = new DateTime(2026,6,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "Junior ML Engineer (Contract)", Description = "Support model training experiments, data preprocessing, and evaluation. Python required.", Location = "Singapore (Remote)", Salary = 4500m, DatePosted = new DateTime(2026,6,1), CreatedBy = "employer@techsoft.com" },
+            new JobPost { EmployerId = 1, Title = "Product Associate (Tech)", Description = "Support product planning, write user stories, coordinate with dev/design, and track feature delivery.", Location = "Singapore (CBD)", Salary = 3600m, DatePosted = new DateTime(2026,7,1), CreatedBy = "employer@techsoft.com" }
+        };
+
+        loaded = true;
+    }
+}

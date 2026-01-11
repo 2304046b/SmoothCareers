@@ -7,12 +7,19 @@ using SmoothCareers.Domain;
 
 namespace SmoothCareers.Data
 {
-    public class SmoothCareersContext(DbContextOptions<SmoothCareersContext> options) : IdentityDbContext<SmoothCareersUser>(options)
+    public class SmoothCareersContext(DbContextOptions<SmoothCareersContext> options)
+        : IdentityDbContext<SmoothCareersUser>(options)
     {
         public DbSet<SmoothCareers.Domain.JobPost> JobPost { get; set; } = default!;
         public DbSet<SmoothCareers.Domain.JobCategory> JobCategory { get; set; } = default!;
         public DbSet<SmoothCareers.Domain.JobType> JobType { get; set; } = default!;
         public DbSet<SmoothCareers.Domain.WorkArrangement> WorkArrangement { get; set; } = default!;
+        public DbSet<SmoothCareers.Domain.Employer> Employer { get; set; } = default!;
+        public DbSet<SmoothCareers.Domain.Application> Application { get; set; } = default!;
+        public DbSet<SavedJob> SavedJob { get; set; } = default!;
+
+        // ✅ ADD THIS LINE
+        public DbSet<SmoothCareers.Domain.JobSeeker> JobSeeker { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -22,15 +29,10 @@ namespace SmoothCareers.Data
             builder.ApplyConfiguration(new JobTypeSeed());
             builder.ApplyConfiguration(new JobPostSeed());
             builder.ApplyConfiguration(new EmployerSeed());
-
             builder.ApplyConfiguration(new WorkArrangementSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new UserRoleSeed());
-
-
         }
-        public DbSet<SmoothCareers.Domain.Employer> Employer { get; set; } = default!;
-        public DbSet<SmoothCareers.Domain.Application> Application { get; set; } = default!;
     }
 }

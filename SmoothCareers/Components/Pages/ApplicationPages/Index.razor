@@ -1,58 +1,69 @@
 ﻿@page "/applications"
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using SmoothCareers.Domain
 @using AppEntity = SmoothCareers.Domain.Application
-@implements IAsyncDisposable
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 
 <PageTitle>Applications</PageTitle>
 
-<h1>Applications</h1>
+<h1>My Applications</h1>
 
 <p>
-    <a href="/applications/create">Create New</a>
+    <a href="/applications/create" class="btn btn-primary">Apply to Job</a>
 </p>
 
-<QuickGrid TGridItem="AppEntity"
-           Class="table"
-           Items="applications.AsQueryable()">
-
-    <PropertyColumn Property="a => a.JobPostId" Title="Job Post ID" />
-    <PropertyColumn Property="a => a.JobSeekerId" Title="Job Seeker ID" />
-    <PropertyColumn Property="a => a.Status" />
-    <PropertyColumn Property="a => a.DateApplied" />
-    <PropertyColumn Property="a => a.DateCreated" />
-    <PropertyColumn Property="a => a.DateUpdated" />
-    <PropertyColumn Property="a => a.CreatedBy" />
-    <PropertyColumn Property="a => a.UpdatedBy" />
-
-    <TemplateColumn Context="application">
-        <a href="@($"/applications/edit?id={application.Id}")">Edit</a> |
-        <a href="@($"/applications/details?id={application.Id}")">Details</a> |
-        <a href="@($"/applications/delete?id={application.Id}")">Delete</a>
-    </TemplateColumn>
-
-</QuickGrid>
+@if (!loaded)
+{
+    <p><em>Loading...</em></p>
+}
+else if (applications.Count == 0)
+{
+    <p>No applications found yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Status</th>
+                <th>Date Applied</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var app in applications)
+            {
+                <tr>
+                    <td>@app.JobPost?.Title</td>
+                    <td>@app.Status</td>
+                    <td>@app.DateApplied.ToShortDateString()</td>
+                    <td>
+                        <a href="@($"/applications/details?id={app.Id}")">Details</a> |
+                        <a href="@($"/applications/edit?id={app.Id}")">Edit</a> |
+                        <a href="@($"/applications/delete?id={app.Id}")">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private SmoothCareers.Data.SmoothCareersContext context = default!;
     private List<AppEntity> applications = new();
+    private bool loaded = false;
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
+        // Show only jobseeker's applications
         applications = await context.Application
+            .Include(a => a.JobPost)
+            .Where(a => a.JobSeekerId == 1)
             .OrderByDescending(a => a.DateApplied)
             .ToListAsync();
-    }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (context != null)
-        {
-            await context.DisposeAsync();
-        }
+        loaded = true;
     }
 }

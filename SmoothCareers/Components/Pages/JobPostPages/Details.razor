@@ -3,6 +3,8 @@
 @using SmoothCareers.Domain
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
 
 <PageTitle>Details</PageTitle>
 
@@ -65,6 +67,43 @@
         if (jobpost is null)
         {
             NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task SaveJob()
+    {
+        // Get logged-in user
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
+
+        if (string.IsNullOrEmpty(userId) || jobpost is null)
+        {
+            await JS.InvokeVoidAsync("alert", "Cannot save job. Please log in first.");
+            return;
+        }
+
+        using var context = DbFactory.CreateDbContext();
+
+        // Check if already saved
+        var exists = await context.SavedJob
+            .AnyAsync(sj => sj.JobPostId == jobpost.Id && sj.SavedByUserId == userId);
+
+        if (!exists)
+        {
+            context.SavedJob.Add(new SavedJob
+            {
+                JobPostId = jobpost.Id,
+                SavedByUserId = userId,
+                DateSaved = DateTime.UtcNow
+            });
+
+            await context.SaveChangesAsync();
+            await JS.InvokeVoidAsync("alert", "Job saved successfully!");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "You already saved this job.");
         }
     }
 }
