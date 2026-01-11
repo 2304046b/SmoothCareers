@@ -4,6 +4,8 @@
 @using SmoothCareers.Data
 @inject IDbContextFactory<SmoothCareersContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
 
 <PageTitle>Details</PageTitle>
 
@@ -50,14 +52,11 @@
             <dd class="col-sm-10">@jobpost.UpdatedBy</dd>
         </dl>
 
-        <div>
-            <a href="@($"/jobposts/edit?id={jobpost.Id}")">Edit</a> |
-            <a href="/savedjobs">Save Job</a> |
-            <a href="/jobposts">Back to List</a>
-            <AuthorizeView Roles="Administrator">
-                <a href="@($"/jobposts/edit?id={jobpost.Id}")">Edit</a> |
-            </AuthorizeView>
-            <a href="@($"/jobposts")">Back to List</a>
+        <div class="d-flex gap-2">
+            <a class="btn btn-primary" href="@($"/jobposts/edit?id={jobpost.Id}")">Edit</a>
+            <button class="btn btn-success" @onclick="SaveJob">Save Job</button>
+            <a class="btn btn-info" href="/savedjobs">View Saved Jobs</a>
+            <a class="btn btn-secondary" href="/jobposts">Back to List</a>
         </div>
     }
 </div>
@@ -76,6 +75,43 @@
         if (jobpost is null)
         {
             NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task SaveJob()
+    {
+        // Get logged-in user
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
+
+        if (string.IsNullOrEmpty(userId) || jobpost is null)
+        {
+            await JS.InvokeVoidAsync("alert", "Cannot save job. Please log in first.");
+            return;
+        }
+
+        using var context = DbFactory.CreateDbContext();
+
+        // Check if already saved
+        var exists = await context.SavedJob
+            .AnyAsync(sj => sj.JobPostId == jobpost.Id && sj.SavedByUserId == userId);
+
+        if (!exists)
+        {
+            context.SavedJob.Add(new SavedJob
+            {
+                JobPostId = jobpost.Id,
+                SavedByUserId = userId,
+                DateSaved = DateTime.UtcNow
+            });
+
+            await context.SaveChangesAsync();
+            await JS.InvokeVoidAsync("alert", "Job saved successfully!");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "You already saved this job.");
         }
     }
 }

@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col-md-5">
-        <EditForm Model="Application" OnValidSubmit="AddApplication">
+        <EditForm Model="Application" OnValidSubmit="AddApplication" FormName="applicationForm" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
 
@@ -55,22 +55,9 @@
                 <InputDate class="form-control" @bind-Value="Application.DateUpdated" disabled />
             </div>
 
-            <!-- Created / Updated By -->
-            <div class="mb-3">
-                <label class="form-label">Created By</label>
-                <InputSelect class="form-control" @bind-Value="Application.CreatedBy">
-                    <option value="caven">caven</option>
-                    <option value="others">others</option>
-                </InputSelect>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Updated By</label>
-                <InputSelect class="form-control" @bind-Value="Application.UpdatedBy">
-                    <option value="caven">caven</option>
-                    <option value="others">others</option>
-                </InputSelect>
-            </div>
+            <!-- Created / Updated By (Auto to jobseeker) -->
+            <InputText @bind-Value="Application.CreatedBy" hidden />
+            <InputText @bind-Value="Application.UpdatedBy" hidden />
 
             <button type="submit" class="btn btn-primary">Apply</button>
         </EditForm>
@@ -91,15 +78,15 @@
 
         JobPosts = await context.JobPost.ToListAsync();
 
-        // Defaults
-        Application.JobPostId = 1;
-        Application.JobSeekerId = 1;
+        // Defaults for jobseeker
+        Application.JobPostId = JobPosts.FirstOrDefault()?.Id ?? 0;
+        Application.JobSeekerId = 1; // The seeded jobseeker
         Application.Status = "Pending";
         Application.DateApplied = DateTime.Today;
         Application.DateCreated = DateTime.Today;
         Application.DateUpdated = DateTime.Today;
-        Application.CreatedBy = "caven";
-        Application.UpdatedBy = "caven";
+        Application.CreatedBy = "jobseeker";
+        Application.UpdatedBy = "jobseeker";
     }
 
     private async Task AddApplication()

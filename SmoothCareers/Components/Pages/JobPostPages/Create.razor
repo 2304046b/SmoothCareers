@@ -3,89 +3,79 @@
 @using SmoothCareers.Domain
 @inject IDbContextFactory<SmoothCareers.Data.SmoothCareersContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
 @attribute [Authorize(Roles = "Administrator, Employer")]
 @using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
+<h1>Create Job Post</h1>
 
-<h2>JobPost</h2>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="JobPost" OnValidSubmit="AddJobPost" FormName="create" Enhance>
+    <div class="col-md-6">
+        <EditForm Model="JobPost" OnValidSubmit="AddJobPost">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" />
+
             <div class="mb-3">
-                <label for="employerid" class="form-label">EmployerId:</label> 
-                <InputNumber id="employerid" @bind-Value="JobPost.EmployerId" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.EmployerId" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Title:</label>
+                <InputText @bind-Value="JobPost.Title" class="form-control" />
+            </div>
+
             <div class="mb-3">
-                <label for="title" class="form-label">Title:</label> 
-                <InputText id="title" @bind-Value="JobPost.Title" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.Title" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Description:</label>
+                <InputText @bind-Value="JobPost.Description" class="form-control" />
+            </div>
+
             <div class="mb-3">
-                <label for="description" class="form-label">Description:</label> 
-                <InputText id="description" @bind-Value="JobPost.Description" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.Description" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Location:</label>
+                <InputText @bind-Value="JobPost.Location" class="form-control" />
+            </div>
+
             <div class="mb-3">
-                <label for="location" class="form-label">Location:</label> 
-                <InputText id="location" @bind-Value="JobPost.Location" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.Location" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Salary:</label>
+                <InputNumber @bind-Value="JobPost.Salary" class="form-control" />
+            </div>
+
             <div class="mb-3">
-                <label for="salary" class="form-label">Salary:</label> 
-                <InputNumber id="salary" @bind-Value="JobPost.Salary" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.Salary" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="dateposted" class="form-label">DatePosted:</label> 
-                <InputDate id="dateposted" @bind-Value="JobPost.DatePosted" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.DatePosted" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="datecreated" class="form-label">DateCreated:</label> 
-                <InputDate id="datecreated" @bind-Value="JobPost.DateCreated" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.DateCreated" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="dateupdated" class="form-label">DateUpdated:</label> 
-                <InputDate id="dateupdated" @bind-Value="JobPost.DateUpdated" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.DateUpdated" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="createdby" class="form-label">CreatedBy:</label> 
-                <InputText id="createdby" @bind-Value="JobPost.CreatedBy" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.CreatedBy" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="updatedby" class="form-label">UpdatedBy:</label> 
-                <InputText id="updatedby" @bind-Value="JobPost.UpdatedBy" class="form-control" /> 
-                <ValidationMessage For="() => JobPost.UpdatedBy" class="text-danger" /> 
-            </div>        
+                <label class="form-label">Date Posted:</label>
+                <InputDate @bind-Value="JobPost.DatePosted" class="form-control" />
+            </div>
+
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/jobposts">Back to List</a>
+<div class="mt-3">
+    <a href="/jobposts">Back to Job Posts List</a>
 </div>
 
 @code {
-    [SupplyParameterFromForm]
     private JobPost JobPost { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userEmail = user.Identity?.Name ?? "";
+
+        // Auto-fill created/updated by
+        JobPost.CreatedBy = userEmail;
+        JobPost.UpdatedBy = userEmail;
+
+        // Auto-fill dates
+        JobPost.DateCreated = DateTime.UtcNow;
+        JobPost.DateUpdated = DateTime.UtcNow;
+        JobPost.DatePosted = DateTime.UtcNow;
+    }
+
     private async Task AddJobPost()
     {
         using var context = DbFactory.CreateDbContext();
         context.JobPost.Add(JobPost);
         await context.SaveChangesAsync();
+
         NavigationManager.NavigateTo("/jobposts");
     }
 }
